@@ -7,7 +7,7 @@
 #include <string.h>
 #include <string>
 
-bua 
+
 
 int client_socket;
 void init_socket();
