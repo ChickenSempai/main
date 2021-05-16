@@ -1,10 +1,11 @@
 
-#include <iostream>
 
+#include <iostream>
+#include <unistd.h>
 #include <signal.h>
 #include <string.h>
 #include <stdlib.h>
-
+#include <arpa/inet.h>
 #include <errno.h>
 #include <string>
 #include <fstream>
@@ -12,10 +13,10 @@
 #include <sys/un.h>
 #include <sys/socket.h>
 #include <sys/types.h>
-const std::string PID_PATH = "/serverPath/server.pid";
-const std::string SOCK_PATH = "/serverPath/socket";
-const std::string LOG_PATH = "/serverPath/server.log";
-const std::string SAVE_PATH =  "/serverPath/serverSaves/messages.txt";
+const std::string PID_PATH = "./serverPath/server.pid";
+
+const std::string LOG_PATH = "./serverPath/LOGS.txt";
+const std::string SAVE_PATH =  "./serverPath/serverSaves/messages.txt";
 
 void fork_handler(int);
 void handle_connection(int);
@@ -36,7 +37,7 @@ int main(int argc, char *argv[])
 
         daemonize();
 
-        signal(SIGTERM, stop_server);
+        signal(SIGTERM, (sighandler_t)stop_server);
 
         init_socket();
 
@@ -51,18 +52,19 @@ int main(int argc, char *argv[])
 
         while(true) 
         {
-                cout << "Waiting for a connection\n";
-                
+                printf("Waiting for a connection\n");
+                int client_socket;
                 if((client_socket = accept(server_socket, (sockaddr *)&client, &clientSize)) == -1)
                 {
                         perror("Client accept failed");
                         exit(1);
                 }
 
-                cout << "Accepted connection\n";
+                std::cout << "Accepted connection\n";
                 
                 fork_handler(client_socket); 
         }
+        return 0;
 }
 
 void fork_handler(int client_socket)
@@ -85,15 +87,15 @@ void handle_connection(int client_socket)
         char buff[4096];
         unsigned int len;
 
-        cout << "Handling connection\n";
-        ofstream saveFile = ofstream(SAVE_PATH);
+        std::cout << "Handling connection\n";
+        std::ofstream saveFile = std::ofstream(SAVE_PATH);
 
         while(len = recv(client_socket, &buff, 4096, 0), len > 0) 
                 saveFile << buff << '\n';
 
         saveFile.close();
         close(client_socket);
-        cout << "Done handling\n";
+        std::cout << "Done handling\n";
         
         exit(0);
 }
@@ -102,26 +104,27 @@ void handle_connection(int client_socket)
 void handle_args(int argc, char *argv[])
 {
         std::string command = "kill";
-        if(command == strcmp(argv[1])) 
+        if(command == argv[1]) 
                 kill_daemon();
 }
 
 
 void daemonize()
 {
-        ofstream pidfile;
+        std::ofstream pidfile;
         pid_t pid, sid;
 
         switch(pid = fork())
         {
                 case 0:
 
-                        freopen("/dev/null", "r", stdin);
-                        freopen(LOG_PATH, "w", stdout);
-                        freopen(LOG_PATH, "w", stderr);
+
+                        //std::freopen(LOG_PATH.c_str(), "w", stdout);
+                        //std::freopen(LOG_PATH.c_str(), "w", stderr);
+
                         sid = setsid();
                         if (sid < 0) {
-                                cout << "Failed creating unique session ID"
+                                std::cout << "Failed creating unique session ID";
                                 exit(EXIT_FAILURE);
                         }
                         chdir("/");
@@ -139,8 +142,8 @@ void daemonize()
 
 void stop_server()
 {
-        unlink(PID_PATH); 
-        unlink(SOCK_PATH);
+        unlink(PID_PATH.c_str()); 
+
         kill(0, SIGKILL); 
         exit(0);
 }
@@ -158,9 +161,8 @@ void init_socket()
 
         sockaddr_in hint;
         hint.sin_family = AF_INET;
-        strcpy(local.sin_path, SOCK_PATH);
-        unlink(local.sin_path);
-        inet_pton(AF_INET, "0.0.0.0", &hint.sin_addr);
+
+        inet_pton(AF_INET, "127.0.0.1", &hint.sin_addr);
         if(bind(server_socket, (struct sockaddr *)&hint, sizeof(hint)) == -1)
         {
                 perror("Bind failed");
@@ -170,13 +172,12 @@ void init_socket()
 
 void kill_daemon()
 {
-        ofstream pidfile;
+        std::ifstream pidfile;
         pid_t pid;
-
-        if(pidfile = std::ofstream(PID_PATH))
+        if(pidfile = std::ifstream(PID_PATH))
         {
                 pidfile >> pid;
-                cout << "Killing PID" << pid << '\n';
+                std::cout << "Killing PID" << pid << '\n';
                 kill(pid, SIGTERM);
         }
         else
