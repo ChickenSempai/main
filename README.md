@@ -1,3 +1,3 @@
 # main
 Main repository
-Finally starting to make a workable git
+Most of the content will be in branches
