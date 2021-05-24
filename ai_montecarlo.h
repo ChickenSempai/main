@@ -4,7 +4,6 @@
 #include <qrandom.h>
 #include "_hex.h"
 #include "actor.h"
-#include <time.h>
 
 class AI_MonteCarlo : public actor {
 public:

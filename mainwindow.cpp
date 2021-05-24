@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include "human.h"
+#include "ai_weak.h"
+#include "ai_montecarlo.h"
 #include "_hex.h"
 #include "gamewindow.h"
 

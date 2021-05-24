@@ -1,17 +1,10 @@
 #ifndef HEXBUTTON_H
 #define HEXBUTTON_H
 
-#include <QMainWindow>
-#include <QObject>
-#include <QWidget>
+
 #include <QtMath>
-#include <QPoint>
-#include <QPolygon>
-#include <QPolygonF>
-#include <QVector>
-#include <QFont>
 #include <QPushButton>
-#include <QColor>
+
 
 class hexButton:public QPushButton
 {

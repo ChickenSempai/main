@@ -3,7 +3,7 @@
 
 #include "_hex.h"
 
-inline tpHex Djikstra_path(int i, _hex& h)
+tpHex Djikstra_path(int i, _hex& h)
 {
     tpHex color = h[i];
     std::vector <bool> visited(h.all_nodes(), false);
@@ -68,7 +68,7 @@ inline tpHex Djikstra_path(int i, _hex& h)
     return tpHex::Empty;
 }
 
-inline tpHex test_win_path(_hex & h)
+tpHex test_win_path(_hex & h)
 {
     for (int i = 0, j = 0; i < h.side(); i++, j += h.side()) {
         if (h[i] == tpHex::Vert)
@@ -81,7 +81,7 @@ inline tpHex test_win_path(_hex & h)
     return tpHex::Empty;
 }
 
-inline tpHex test_win_fast(_hex &h)
+tpHex test_win_fast(_hex &h)
 {
     for (int i = 0; i < h.side(); i++)
         if (h[i] == tpHex::Vert)

@@ -3,9 +3,7 @@
 
 #include <QMainWindow>
 #include "actor.h"
-#include "human.h"
-#include "ai_weak.h"
-#include "ai_montecarlo.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

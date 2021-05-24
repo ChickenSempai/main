@@ -4,11 +4,10 @@
 #include <QWidget>
 #include <QPushButton>
 #include <actor.h>
-#include <QVector>
 #include <hexbutton.h>
 #include <QLabel>
-#include <QThread>
-#include "worker.h"
+#include <worker.h>
+
 
 namespace Ui {
 class GameWindow;

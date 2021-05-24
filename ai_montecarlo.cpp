@@ -1,6 +1,8 @@
 
 #include "ai_montecarlo.h"
 #include "roadEval.h"
+#include <time.h>
+
 int AI_MonteCarlo::move(_hex& board)
 {
 
@@ -36,7 +38,7 @@ int AI_MonteCarlo::move(_hex& board)
     }
     int best_move;
     int most_wins = -1, win_case = 0;
-    int k = 0;
+    unsigned int k = 0;
     if (cpy_brd.all_nodes() % 2 == 0) {
         if (his_steps > my_steps)
             *(shuf[k++]) = color;

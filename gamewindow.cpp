@@ -3,7 +3,10 @@
 #include "ui_gamewindow.h"
 #include <QString>
 #include <QPainter>
+#include <QThread>
+#include <QVector>
 #include "roadEval.h"
+#include <qrandom.h>
 
 QColor RED(240, 10 ,10);
 QColor BLUE(10, 10, 240);
