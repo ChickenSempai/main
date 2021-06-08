@@ -10,6 +10,8 @@
 #include "StateViper.h"
 #include <chrono>
 #include <thread>
+#include <semaphore>
+
 int main()
 {
     Existence* mainRealm = Existence::getExistence();

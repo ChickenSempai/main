@@ -12,8 +12,8 @@ std::mutex simulationMutex;
 class Dimension
 {
 public:
-	Dimension(Dimension&& other);
-	Dimension(Dimension&) = default;
+	Dimension(Dimension&& other)noexcept;
+	Dimension(const Dimension&) = default;
 	Dimension() = default;
 	void startSimulation();
 	void stopSimulation();
@@ -46,7 +46,7 @@ private:
 
 
 
-Dimension::Dimension(Dimension&& other) : m_life(other.m_life) {
+Dimension::Dimension(Dimension&& other) noexcept : m_life(other.m_life) {
 	m_running = other.m_running;
 	th = other.th;
 	other.m_running = false;
@@ -55,7 +55,7 @@ Dimension::Dimension(Dimension&& other) : m_life(other.m_life) {
 
 void Dimension::startSimulation()
 {
-	const std::lock_guard<std::mutex> lock(simulationMutex);
+	
 	m_running = true;
 
 	th = new std::thread(&Dimension::realityAlgorithm, this);
