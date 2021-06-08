@@ -8,25 +8,28 @@
 #include <cassert>
 #include <iostream>
 
-class GeneBank {
-public:
-    virtual void mutate(Life& unit) = 0;
-};
+namespace {
 
-class PowerGeneBank : public GeneBank {
-public:
-    
-    void mutate(Life& unit) override {
-        unit.setFatness(unit.getFatness() * 2 );
-    }
-};
+    class GeneBank {
+    public:
+        virtual void mutate(Life& unit) = 0;
+    };
 
-class WeakGeneBank : public GeneBank {
-public:
-    void mutate(Life& unit) override {
-        unit.setFatness(unit.getFatness() / 2);
-    }
-};
+    class PowerGeneBank : public GeneBank {
+    public:
+
+        void mutate(Life& unit) override {
+            unit.setFatness(unit.getFatness() * 2);
+        }
+    };
+
+    class WeakGeneBank : public GeneBank {
+    public:
+        void mutate(Life& unit) override {
+            unit.setFatness(unit.getFatness() / 2);
+        }
+    };
+}
 
 class EvolveChamber
 {

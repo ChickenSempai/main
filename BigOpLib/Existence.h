@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include "Dimension.h"
+#include <mutex>
 
 class Existence
 {
@@ -15,7 +16,7 @@ public:
 	Dimension* getDimension(int i);
 	void createDimension();
 	void startSimulation();
-
+	void stopSimulation();
 protected:
 	Existence() {};
 
@@ -24,9 +25,6 @@ protected:
 };
 
 Existence* Existence::m_existence = nullptr;
-
-
-#include <mutex>
 
 std::mutex ex_mutex;
 
@@ -64,8 +62,15 @@ void Existence::createDimension()
 
 void Existence::startSimulation()
 {
-	for (auto dimension : m_dimensions) {
+	for (auto& dimension : m_dimensions) {
 		dimension.startSimulation();
+	}
+}
+
+void Existence::stopSimulation()
+{
+	for (auto& dimension : m_dimensions) {
+		dimension.stopSimulation();
 	}
 }
 

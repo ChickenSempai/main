@@ -8,7 +8,8 @@
 #include "Cleanse.h"
 #include "CreationChamber.h"
 #include "StateViper.h"
-
+#include <chrono>
+#include <thread>
 int main()
 {
     Existence* mainRealm = Existence::getExistence();
@@ -22,6 +23,15 @@ int main()
     CleanseFat biggerRheaper;
     rheaper.setNext(&dumhe)->setNext(&biggerRheaper);
     
+    mainRealm->createDimension();
+    mainRealm->createDimension();
+    mainRealm->createDimension();
+    mainRealm->createDimension();
+    mainRealm->createDimension();
+    mainRealm->startSimulation();
+    
+    std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+    mainRealm->stopSimulation();
 
     rheaper.setFatThreshold(0, 3);
     biggerRheaper.setFatThreshold(4, 5);
