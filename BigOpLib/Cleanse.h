@@ -37,10 +37,10 @@ private:
 	int m_fatHighThreshold = 0;
 private:
 	void m_execute(Dimension& dimension) {
-		std::vector <Life>* inhabits = &dimension.listInhabitants();
+		std::vector <Life> inhabits = dimension.listInhabitants();
 		for (int i = 0; i < dimension.listInhabitants().size(); i++) {
-			if ((*inhabits)[i].getFatness() >= m_fatLowThreshold 
-				&& (*inhabits)[i].getFatness() < m_fatHighThreshold) {
+			if (inhabits[i].getFatness() >= m_fatLowThreshold 
+				&& inhabits[i].getFatness() < m_fatHighThreshold) {
 				dimension.deleteAgent(i--);
 				
 			}

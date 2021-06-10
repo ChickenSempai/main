@@ -35,6 +35,8 @@ int main()
     std::this_thread::sleep_for(std::chrono::milliseconds(3000));
     mainRealm->stopSimulation();
 
+    mainRealm->startSimulationTimed(3000);
+
     rheaper.setFatThreshold(0, 3);
     biggerRheaper.setFatThreshold(4, 5);
     rheaper.execute(*unicornWorld);

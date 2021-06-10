@@ -6,6 +6,8 @@
 #include "CreationChamber.h"
 #include <mutex>
 #include <thread>
+#include <future>
+#include <memory>
 
 std::mutex simulationMutex;
 
@@ -17,13 +19,14 @@ public:
 	Dimension() = default;
 	void startSimulation();
 	void stopSimulation();
+	void startSimulationTimed(size_t iterations);
 	bool running();
 	void putAgents( CreationChamber&, size_t);
 	void putAgent(CreationChamber&);
-	std::vector<Life> &listInhabitants();
+	const std::vector<Life> &listInhabitants();
 	void deleteAgent(const size_t);
 	void deleteAgent(std::vector<Life>::iterator);
-	void clearDimension() {};
+	void clearDimension();
 	~Dimension() { stopSimulation(); }
 protected:
 	void realityAlgorithm() {
@@ -35,7 +38,16 @@ protected:
 			}
 		}
 	}
-
+	void realityAlgorithmIter(size_t iterations) {
+		while (iterations--) {
+			for (auto& unit : m_life) {
+				//there could have been some logic
+				//but not today...
+				unit.getFatness();
+			}
+		}
+		m_running = false;
+	}
 protected:
 	std::vector<Life> m_life;
 	bool m_running = false;
@@ -55,9 +67,9 @@ Dimension::Dimension(Dimension&& other) noexcept : m_life(other.m_life) {
 
 void Dimension::startSimulation()
 {
-	
+	if (m_running)
+		return;
 	m_running = true;
-
 	th = new std::thread(&Dimension::realityAlgorithm, this);
 }
 
@@ -68,6 +80,14 @@ void Dimension::stopSimulation()
 		th->join();
 		delete th;
 	}
+}
+
+void Dimension::startSimulationTimed(size_t iterations)
+{
+	if (m_running)
+		return;
+	m_running = true;
+	std::thread(&Dimension::realityAlgorithmIter, this, iterations).detach();
 }
 
 bool Dimension::running()
@@ -83,21 +103,34 @@ void Dimension::putAgents(CreationChamber& creator, size_t size)
 
 void Dimension::putAgent(CreationChamber& creator)
 {
+	if (m_running)
+		return;
 	m_life.push_back(std::move(*creator.create()));
 }
 
-std::vector <Life>& Dimension::listInhabitants()
+const std::vector <Life>& Dimension::listInhabitants()
 {
 	return m_life;
 }
 
 void Dimension::deleteAgent(const size_t pos)
 {
+	if (m_running)
+		return;
 	m_life.erase(m_life.begin() + pos);
 }
 
 void Dimension::deleteAgent(std::vector<Life>::iterator agentIt)
 {
+	if (m_running)
+		return;
 	m_life.erase(agentIt);
+}
+
+void Dimension::clearDimension()
+{
+	if (m_running)
+		return;
+	m_life.clear();
 }
 

@@ -4,6 +4,7 @@
 #include <string>
 #include "Dimension.h"
 #include <mutex>
+#include <future>
 
 class Existence
 {
@@ -17,6 +18,7 @@ public:
 	void createDimension();
 	void startSimulation();
 	void stopSimulation();
+	void startSimulationTimed(size_t iterations);
 protected:
 	Existence() {};
 
@@ -73,4 +75,12 @@ void Existence::stopSimulation()
 		dimension.stopSimulation();
 	}
 }
+
+void Existence::startSimulationTimed(size_t iterations)
+{
+	for (auto& dimension : m_dimensions) {
+		dimension.startSimulationTimed(iterations);
+	}
+}
+
 
